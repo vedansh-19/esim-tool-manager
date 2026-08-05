@@ -1,0 +1,179 @@
+{
+  "_meta": {
+    "schema_version": 1,
+    "target": "eSim 2.5",
+    "description": "Declarative registry of the external tools eSim invokes as subprocesses. Adding or retargeting a tool is a data change, not a code change.",
+    "provenance_note": "eSim does not publish a machine-readable matrix of supported tool versions. Each constraint below carries a `source` field: 'esim-docs' means the bound is stated in eSim's own INSTALL/README/manual; 'assumed' means it is a conservative floor chosen by this project and should be reviewed against a real eSim installation before being treated as authoritative.",
+    "backends": ["apt", "brew", "choco"]
+  },
+
+  "tools": {
+    "ngspice": {
+      "summary": "Mixed-level/mixed-signal circuit simulator; eSim's simulation engine.",
+      "criticality": "required",
+      "used_by": ["Simulation", "NGHDL", "NgVeri"],
+      "homepage": "https://ngspice.sourceforge.io/",
+      "probe": {
+        "executable": "ngspice",
+        "args": ["--version"],
+        "pattern": "ngspice-([0-9]+(?:\\.[0-9]+)*)",
+        "merge_stderr": true
+      },
+      "version": {
+        "min": "34",
+        "source": "assumed"
+      },
+      "packages": {
+        "apt": "ngspice",
+        "brew": "ngspice",
+        "choco": {
+          "package": "",
+          "note": "No maintained Chocolatey package; the eSim Windows installer bundles Ngspice."
+        }
+      }
+    },
+
+    "kicad": {
+      "summary": "Schematic capture (Eeschema) and PCB layout; eSim's front-end editor.",
+      "criticality": "required",
+      "used_by": ["Schematic Editor", "PCB Design", "Footprint Editor"],
+      "homepage": "https://www.kicad.org/",
+      "probe": {
+        "executable": "kicad-cli",
+        "args": ["--version"],
+        "pattern": null,
+        "merge_stderr": true
+      },
+      "version": {
+        "min": "6.0",
+        "source": "assumed"
+      },
+      "packages": {
+        "apt": "kicad",
+        "brew": { "package": "kicad", "cask": true },
+        "choco": "kicad"
+      }
+    },
+
+    "ghdl": {
+      "summary": "VHDL simulator; provides the digital half of eSim's mixed-signal flow.",
+      "criticality": "recommended",
+      "used_by": ["NGHDL"],
+      "homepage": "https://ghdl.github.io/ghdl/",
+      "probe": {
+        "executable": "ghdl",
+        "args": ["--version"],
+        "pattern": "GHDL ([0-9]+(?:\\.[0-9]+)*)",
+        "merge_stderr": true
+      },
+      "version": {
+        "min": "1.0",
+        "source": "assumed"
+      },
+      "packages": {
+        "apt": "ghdl",
+        "brew": "ghdl",
+        "choco": {
+          "package": "",
+          "note": "Distributed as a GitHub release archive on Windows rather than via Chocolatey."
+        }
+      }
+    },
+
+    "verilator": {
+      "summary": "Verilog/SystemVerilog to C++ translator; backs eSim's NgVeri module.",
+      "criticality": "recommended",
+      "used_by": ["NgVeri", "Makerchip"],
+      "homepage": "https://www.veripool.org/verilator/",
+      "probe": {
+        "executable": "verilator",
+        "args": ["--version"],
+        "pattern": "Verilator ([0-9]+(?:\\.[0-9]+)*)",
+        "merge_stderr": true
+      },
+      "version": {
+        "min": "4.0",
+        "source": "assumed"
+      },
+      "packages": {
+        "apt": "verilator",
+        "brew": "verilator",
+        "choco": {
+          "package": "",
+          "note": "No maintained Chocolatey package; WSL or a prebuilt binary is typical on Windows."
+        }
+      }
+    },
+
+    "xterm": {
+      "summary": "Terminal emulator Ngspice opens for its interactive plot window on Linux.",
+      "criticality": "optional",
+      "used_by": ["Ngspice plotting"],
+      "homepage": "https://invisible-island.net/xterm/",
+      "probe": {
+        "executable": "xterm",
+        "args": ["-version"],
+        "pattern": "XTerm\\(([0-9]+)\\)",
+        "merge_stderr": true
+      },
+      "version": {
+        "source": "assumed"
+      },
+      "packages": {
+        "apt": "xterm",
+        "brew": {
+          "package": "xquartz",
+          "cask": true,
+          "note": "macOS has no native X server; xterm arrives with XQuartz."
+        },
+        "choco": {
+          "package": "",
+          "note": "Not applicable on Windows; eSim uses a native plot window there."
+        }
+      }
+    },
+
+    "make": {
+      "summary": "Build driver required to compile NGHDL's generated model code.",
+      "criticality": "recommended",
+      "used_by": ["NGHDL"],
+      "homepage": "https://www.gnu.org/software/make/",
+      "probe": {
+        "executable": "make",
+        "args": ["--version"],
+        "pattern": "GNU Make ([0-9]+(?:\\.[0-9]+)*)",
+        "merge_stderr": true
+      },
+      "version": {
+        "source": "assumed"
+      },
+      "packages": {
+        "apt": "make",
+        "brew": "make",
+        "choco": "make"
+      }
+    },
+
+    "python3": {
+      "summary": "Interpreter that runs eSim itself and this tool manager.",
+      "criticality": "required",
+      "used_by": ["eSim application"],
+      "homepage": "https://www.python.org/",
+      "probe": {
+        "executable": "python3",
+        "args": ["--version"],
+        "pattern": "Python ([0-9]+(?:\\.[0-9]+)*)",
+        "merge_stderr": true
+      },
+      "version": {
+        "min": "3.8",
+        "source": "esim-docs"
+      },
+      "packages": {
+        "apt": "python3",
+        "brew": "python@3.12",
+        "choco": "python3"
+      }
+    }
+  }
+}
