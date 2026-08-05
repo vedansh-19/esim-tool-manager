@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "esim-tool-manager"
+version = "0.1.0"
+description = "Automated manager for the external tools eSim depends on"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "GPL-3.0-or-later" }
+keywords = ["esim", "eda", "ngspice", "kicad", "dependency-management"]
+classifiers = [
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Topic :: System :: Installation/Setup",
+]
+
+# Intentionally empty. The tool manager runs before a machine is provisioned,
+# so it must not need anything installed in order to install things.
+dependencies = []
+
+[project.scripts]
+toolman = "esim_toolmanager.cli:main"
+
+[tool.setuptools]
+packages = ["esim_toolmanager", "esim_toolmanager.registry", "esim_toolmanager.platforms"]
+
+[tool.setuptools.package-data]
+"esim_toolmanager.registry" = ["*.json"]
